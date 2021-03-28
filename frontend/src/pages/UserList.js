@@ -25,10 +25,11 @@ const UserList = ({ history }) => {
     } else {
       history.pushState("/login");
     }
-  }, [userInfo, dispatch, history, successDelete]);
+  }, [userInfo, dispatch, history ]);
 
   const deleteUserHandler = (id) => {
-    dispatch(deleteUser(id))
+    // dispatch(deleteUser(id))
+    console.log("deleted.")
   };
 
   return (
@@ -39,7 +40,7 @@ const UserList = ({ history }) => {
       ) : error ? (
         <Message varient='danger'>{error}</Message>
       ) : (
-        <table className='table table-hover table-bordered table-responsive table-md'>
+        <table className='table table-hover table-bordered table-responsive table-md mx-auto'>
           <thead>
             <tr>
               <th>USER ID</th>

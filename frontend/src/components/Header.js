@@ -1,10 +1,11 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import Cart from "../assets/cart-b.svg";
 import { logout } from "../actions/userActions.js";
 
 const Header = () => {
+  let history = useHistory();
   const dispatch = useDispatch();
 
   const userLogin = useSelector((state) => state.userLogin);
@@ -13,6 +14,8 @@ const Header = () => {
 
   const logoutHandler = () => {
     dispatch(logout());
+    localStorage.clear();
+    history.push('/')
     console.log("Logout successful.");
   };
 
@@ -99,7 +102,7 @@ const Header = () => {
                     data-bs-toggle='dropdown'
                     aria-expanded='false'
                   >
-                    {userInfo.name}
+                    Admin
                   </button>
 
                   <ul
