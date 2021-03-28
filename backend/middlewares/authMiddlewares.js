@@ -37,7 +37,7 @@ const forAdmin = (req, res, next) => {
     next();
   } else {
     res.status(401).json({
-      message: "Not authorized as Admin for the following details.",
+      message: "Not authorized as Admin.",
     });
   }
 };
