@@ -12,6 +12,8 @@ import UpdateProfile from "./pages/UpdateProfile.js";
 import Shipping from "./pages/Shipping.js";
 import PaymentMethod from "./pages/PaymentMethod.js";
 import PlaceOrder from "./pages/PlaceOrder.js";
+import Order from "./pages/Order.js";
+import UserList from "./pages/UserList.js";
 
 const App = () => {
   return (
@@ -23,10 +25,12 @@ const App = () => {
       <Route path='/shipping' component={Shipping} />
       <Route path='/payment' component={PaymentMethod} />
       <Route path='/placeorder' component={PlaceOrder} />
+      <Route path='/orders/:id' component={Order} />
       <Route path='/profile' component={Profile} />
       <Route path='/updateprofile' component={UpdateProfile} />
       <Route path='/product/:id' component={Product} />
       <Route path='/cart/:id?' component={Cart} />
+      <Route path='/admin/userslist' component={UserList} />
       <Route exact path='/' component={Home} />
       <Footer />
     </div>

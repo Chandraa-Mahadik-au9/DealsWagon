@@ -91,10 +91,39 @@ const Header = () => {
                   </Link>
                 </div>
               )}
+              {userInfo && userInfo.isAdmin && (
+                <div className='dropdown ml-1'>
+                  <button
+                    className='btn btn-primary dropdown-toggle profileButton'
+                    id='dropdownMenuLink'
+                    data-bs-toggle='dropdown'
+                    aria-expanded='false'
+                  >
+                    {userInfo.name}
+                  </button>
 
-              {/* <Link to='/register'>
-                <button className='btn btn-primary m-1'>Sign Up</button>
-              </Link> */}
+                  <ul
+                    className='dropdown-menu'
+                    aria-labelledby='dropdownMenuLink'
+                  >
+                    <li>
+                      <Link className='dropdown-item' to='/admin/userslist'>
+                        Users
+                      </Link>
+                    </li>
+                    <li>
+                      <Link className='dropdown-item' to='/admin/productslist'>
+                        Products
+                      </Link>
+                    </li>
+                    <li>
+                      <Link className='dropdown-item' to='/admin/orderslist'>
+                        Orders
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
         </div>

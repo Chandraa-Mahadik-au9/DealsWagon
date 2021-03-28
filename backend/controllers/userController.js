@@ -20,7 +20,7 @@ const authUser = asyncHandler(async (req, res) => {
       token: generateToken(user._id),
     });
   } else {
-    return res.status(401).json({message: "Invalid email or password"});
+    return res.status(401).json({ message: "Invalid email or password" });
   }
 });
 
@@ -34,7 +34,9 @@ const registerUser = asyncHandler(async (req, res) => {
   const userExists = await User.findOne({ email });
 
   if (userExists) {
-    return res.status(400).json({message: "User with this email already exists"});
+    return res
+      .status(400)
+      .json({ message: "User with this email already exists" });
   }
 
   const user = await User.create({
@@ -52,7 +54,7 @@ const registerUser = asyncHandler(async (req, res) => {
       token: generateToken(user._id),
     });
   } else {
-    return res.status(404).json({message: "User not found"});
+    return res.status(404).json({ message: "User not found" });
   }
 });
 
@@ -81,7 +83,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     const user = result;
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
-    if(req.body.password) {
+    if (req.body.password) {
       user.password = req.body.password;
     }
 
@@ -98,4 +100,38 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   });
 });
 
-export { authUser, registerUser, getUserProfile, updateUserProfile };
+// @desc Get all users
+// @route GET /api/users
+// @access Private (Admin)
+
+const getAllUsers = asyncHandler(async (req, res) => {
+  const users = await User.find({});
+  res.json(users);
+});
+
+// @desc Delete a users
+// @route DELETE /api/users/:id
+// @access Private (Admin)
+
+const deleteUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+  if (user) {
+    await user.remove();
+    res.json({
+      message: "User removed.",
+    });
+  } else {
+    res.status(404).json({
+      message: "User not found.",
+    });
+  }
+});
+
+export {
+  authUser,
+  registerUser,
+  getUserProfile,
+  updateUserProfile,
+  getAllUsers,
+  deleteUser,
+};
