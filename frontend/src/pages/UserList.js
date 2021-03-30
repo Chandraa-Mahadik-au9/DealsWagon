@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message.js";
@@ -25,11 +25,13 @@ const UserList = ({ history }) => {
     } else {
       history.pushState("/login");
     }
-  }, [userInfo, dispatch, history ]);
+  }, [userInfo, dispatch, history, successDelete]);
 
   const deleteUserHandler = (id) => {
-    // dispatch(deleteUser(id))
-    console.log("deleted.")
+    if (window.confirm("Are you sure ?")) {
+      dispatch(deleteUser(id));
+      console.log("User deleted.");
+    }
   };
 
   return (
@@ -47,7 +49,7 @@ const UserList = ({ history }) => {
               <th>NAME</th>
               <th>EMAIL</th>
               <th>ADMIN</th>
-              <th>DELETE</th>
+              <th>OPTIONS</th>
             </tr>
           </thead>
           <tbody>
@@ -68,12 +70,12 @@ const UserList = ({ history }) => {
                   </td>
                   <td>
                     <button className='btn btn-light'>
-                      <Link to={`/users/${user._id}/edit`}>Edit</Link>
+                      <Link to={`/admin/users/${user._id}/edit`}>Edit</Link>
                     </button>
                     <button
                       type='button'
                       className='btn btn-dark'
-                      onClick={deleteUserHandler(user._id)}
+                      onClick={() => deleteUserHandler(user._id)}
                     >
                       Delete
                     </button>

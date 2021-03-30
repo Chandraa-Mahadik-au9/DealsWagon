@@ -14,6 +14,10 @@ import PaymentMethod from "./pages/PaymentMethod.js";
 import PlaceOrder from "./pages/PlaceOrder.js";
 import Order from "./pages/Order.js";
 import UserList from "./pages/UserList.js";
+import UserEdit from "./pages/UserEdit.js";
+import ProductList from "./pages/ProductList.js";
+import ProductEdit from "./pages/ProductEdit.js";
+import OrderList from './pages/OrderList.js';
 
 const App = () => {
   return (
@@ -31,6 +35,14 @@ const App = () => {
       <Route path='/product/:id' component={Product} />
       <Route path='/cart/:id?' component={Cart} />
       <Route path='/admin/userslist' component={UserList} />
+      <Route path='/admin/users/:id/edit' component={UserEdit} />
+      <Route exact path='/admin/productslist' component={ProductList} />
+      <Route exact path='/admin/productslist/:pageNumber' component={ProductList} />
+      <Route path='/admin/products/:id/edit' component={ProductEdit} />
+      <Route path='/admin/orderslist' component={OrderList} />
+      <Route exact path='/search/:keyword' component={Home} />
+      <Route path='/page/:pageNumber' component={Home} />
+      <Route path='/search/:keyword/page/:pageNumber' component={Home} />
       <Route exact path='/' component={Home} />
       <Footer />
     </div>

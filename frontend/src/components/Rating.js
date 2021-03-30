@@ -25,7 +25,7 @@ const Rating = ({ rating, reviews }) => {
             <img style={starStyle} src={(rating >=3) ? FullStar : (rating >=2.5) ? HalfStar : Star} alt="rating" />
             <img style={starStyle} src={(rating >=4) ? FullStar : (rating >=3.5) ? HalfStar : Star} alt="rating" />
             <img style={starStyle} src={(rating >=5) ? FullStar : (rating >=4.5) ? HalfStar : Star} alt="rating" />
-            <span style={reviewStyle}>from {reviews} reviews</span>
+            {reviews && <span style={reviewStyle}>from {reviews} reviews</span>}
         </div>
     )
 }

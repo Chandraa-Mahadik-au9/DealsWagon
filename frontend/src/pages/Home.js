@@ -1,24 +1,29 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Search from '../components/Search.js';
 import Product from "../components/ProductCard.js";
 import { listProducts } from "../actions/productActions.js";
 import Loader from "../components/Loader.js";
 import Message from "../components/Message.js";
+import Paginatn from '../components/Paginatn.js';
+import ProductCarousel from '../components/ProductCarousel.js';
 
-const Home = () => {
+const Home = ({ match }) => {
+  const keyword = match.params.keyword;
+
+  const pageNumber = match.params.pageNumber || 1;
+
   const dispatch = useDispatch();
-  
+ 
   const productList = useSelector((state) => state.productList);
-  const { loading, error, products } = productList;
+  const { loading, error, products, page, pages } = productList;
 
   useEffect(() => {
-    dispatch(listProducts());
-  }, [dispatch]);
+    dispatch(listProducts(keyword, pageNumber));
+  }, [dispatch, keyword, pageNumber]);
 
   return (
     <div>
-      <Search />
+    {!keyword && <ProductCarousel />}
       <hr />
       <h2>
         <span className='badge' style={{ backgroundColor: "#2469A0" }}>
@@ -36,6 +41,7 @@ const Home = () => {
               return <Product key={product._id} product={product} />;
             })}
           </div>
+          <Paginatn pages={pages} page={page} keyword={keyword ? keyword : ''} />
         </div>
       )}
     </div>

@@ -1,8 +1,9 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, Route } from "react-router-dom";
 import Cart from "../assets/cart-b.svg";
 import { logout } from "../actions/userActions.js";
+import Search from "./Search";
 
 const Header = () => {
   let history = useHistory();
@@ -15,7 +16,7 @@ const Header = () => {
   const logoutHandler = () => {
     dispatch(logout());
     localStorage.clear();
-    history.push('/')
+    history.push("/");
     console.log("Logout successful.");
   };
 
@@ -43,13 +44,18 @@ const Header = () => {
           <div className='collapse navbar-collapse' id='navbarSupportedContent'>
             <ul className='navbar-nav me-auto mb-2 mb-lg-0'>
               <li className='nav-item'>
-                <Link className='nav-link active' aria-current='page' to='/'>
+                <Link className='nav-link' aria-current='page' to='/'>
                   Home
                 </Link>
               </li>
               <li className='nav-item'>
                 <Link className='nav-link' to='/'>
-                  Link
+                  About Us
+                </Link>
+              </li>
+              <li className='nav-item'>
+                <Link className='nav-link' to='/'>
+                  Contact Us
                 </Link>
               </li>
             </ul>
@@ -131,6 +137,7 @@ const Header = () => {
           </div>
         </div>
       </nav>
+      <Route render={({history}) => <Search history={history} />} />
     </div>
   );
 };

@@ -20,6 +20,10 @@ import {
   USER_DELETE_REQUEST,
   USER_DELETE_SUCCESS,
   USER_DELETE_FAIL,
+  USERS_UPDATE_SUCCESS,
+  USERS_UPDATE_REQUEST,
+  USERS_UPDATE_FAIL,
+  USERS_UPDATE_RESET,
 } from "../constants/userConstants.js";
 
 export const userLoginReducer = (state = {}, action) => {
@@ -139,7 +143,7 @@ export const listAllUsersReducer = (state = { users: [] }, action) => {
   }
 };
 
-export const userDeleteReducer = (state = {}, action) => {
+export const userDeleteReducer = (state = { }, action) => {
   switch (action.type) {
     case USER_DELETE_REQUEST:
       return {
@@ -154,6 +158,31 @@ export const userDeleteReducer = (state = {}, action) => {
       return {
         loading: false,
         error: action.payload,
+      };
+    default:
+      return state;
+  }
+};
+
+export const userUpdateReducer = (state = { user: {} }, action) => {
+  switch (action.type) {
+    case USERS_UPDATE_REQUEST:
+      return {
+        loading: true,
+      };
+    case USERS_UPDATE_SUCCESS: 
+      return {
+        loading: false,
+        success: true,
+      };
+    case USERS_UPDATE_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    case USERS_UPDATE_RESET:
+      return {
+        user: {}
       };
     default:
       return state;
