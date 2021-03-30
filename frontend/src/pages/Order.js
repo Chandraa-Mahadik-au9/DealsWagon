@@ -5,9 +5,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Message from "../components/Message.js";
 import Loader from "../components/Loader.js";
-import { getOrderDetails, payOrder } from "../actions/orderActions.js";
-import { ORDER_PAY_RESET } from "../constants/orderConstants.js";
-const Order = ({ match }) => {
+import {
+  deliverOrder,
+  getOrderDetails,
+  payOrder,
+} from "../actions/orderActions.js";
+import {
+  ORDER_PAY_RESET,
+  ORDER_DELIVER_RESET,
+} from "../constants/orderConstants.js";
+const Order = ({ match, history }) => {
   const orderId = match.params.id;
 
   const [sdkReady, setSdkReady] = useState(false);
@@ -16,10 +23,15 @@ const Order = ({ match }) => {
 
   const orderDetails = useSelector((state) => state.orderDetails);
   const { loading, order, error } = orderDetails;
-  // console.log(order);
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
   const orderPay = useSelector((state) => state.orderPay);
   const { loading: loadingPay, success: successPay } = orderPay;
+
+  const orderDeliver = useSelector((state) => state.orderDeliver);
+  const { loading: loadingDeliver, success: successDeliver } = orderDeliver;
 
   if (!loading) {
     order.itemsPrice = order.orderItems.reduce(
@@ -29,6 +41,10 @@ const Order = ({ match }) => {
   }
 
   useEffect(() => {
+    if (!userInfo) {
+      history.push("/login");
+    }
+
     const addPaypalScript = async () => {
       const { data: clientId } = await axios.get("/api/config/paypal");
       const script = document.createElement("script");
@@ -42,8 +58,9 @@ const Order = ({ match }) => {
       document.body.appendChild(script);
     };
 
-    if (!order || successPay) {
+    if (!order || successPay || successDeliver) {
       dispatch({ type: ORDER_PAY_RESET });
+      dispatch({ type: ORDER_DELIVER_RESET });
       dispatch(getOrderDetails(orderId));
     } else if (!order.isPaid) {
       if (!window.paypal) {
@@ -52,11 +69,15 @@ const Order = ({ match }) => {
         setSdkReady(true);
       }
     }
-  }, [dispatch, orderId, order, successPay]);
+  }, [history, userInfo, dispatch, orderId, order, successPay, successDeliver]);
 
   const successPaymentHandler = (paymentResult) => {
     console.log(paymentResult);
     dispatch(payOrder(orderId, paymentResult));
+  };
+
+  const deliverHandler = () => {
+    dispatch(deliverOrder(order));
   };
 
   return loading ? (
@@ -188,6 +209,17 @@ const Order = ({ match }) => {
                       onSuccess={successPaymentHandler}
                     />
                   )}
+                </li>
+              )}
+              {loadingDeliver && <Loader />}
+              {userInfo && userInfo.isAdmin && order.isPaid && !order.isDelivered && (
+                <li className='list-group-item'>
+                  <button
+                    className='btn btn-primary btn-block'
+                    onClick={deliverHandler}
+                  >
+                    Mark As Delivered
+                  </button>
                 </li>
               )}
             </ul>

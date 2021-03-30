@@ -4,22 +4,50 @@ import { Link } from "react-router-dom";
 import Rating from "../components/Rating";
 import Loader from "../components/Loader.js";
 import Message from "../components/Message.js";
-import { listProductDetails } from "../actions/productActions.js";
+import {
+  listProductDetails,
+  createProductReview,
+} from "../actions/productActions.js";
+import { PRODUCT_CREATE_REVIEW_RESET } from "../constants/productConstants.js";
 
 const Product = ({ history, match }) => {
   const [quantity, setQuantity] = useState(0);
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState("");
 
   const dispatch = useDispatch();
 
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
 
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
+  const productReviewCreate = useSelector((state) => state.productReviewCreate);
+  const { success: successReview, error: errorReview } = productReviewCreate;
+
   useEffect(() => {
+    if (successReview) {
+      alert("Review Submitted.");
+      setRating(0);
+      setComment("");
+      dispatch({
+        type: PRODUCT_CREATE_REVIEW_RESET,
+      });
+    }
+
     dispatch(listProductDetails(match.params.id));
-  }, [dispatch, match]);
+  }, [dispatch, match, successReview]);
 
   const addToCartHandler = () => {
-    history.push(`/cart/${match.params.id}?quantity=${quantity > 0 ? quantity : 1}`);
+    history.push(
+      `/cart/${match.params.id}?quantity=${quantity > 0 ? quantity : 1}`
+    );
+  };
+
+  const reviewSubmitHandler = (event) => {
+    event.preventDefault();
+    dispatch(createProductReview(match.params.id, { rating, comment }));
   };
 
   return (
@@ -110,6 +138,76 @@ const Product = ({ history, match }) => {
                     >
                       Add To Cart
                     </button>
+                  </div>
+                  <div className='row'>
+                    <div className='col'>
+                      <h2>Reviews : </h2>
+                      {product.reviews.length === 0 && (
+                        <Message varient='info'>No Reviews.</Message>
+                      )}
+                      <ul className='list-group'>
+                        {product.reviews.map((review) => {
+                          return (
+                            <React.Fragment key={review._id}>
+                              <li className='list-group-item'>
+                                <strong>{review.name}</strong>
+                                <Rating rating={review.rating} />
+                                <p>Date: {review.createdAt.substring(0, 10)}</p>
+                                <p>Comment: {review.comment}</p>
+                              </li>
+                            </React.Fragment>
+                          );
+                        })}
+                        <li className='list-group-item'>
+                          <h2>Write a review : </h2>
+                          {errorReview && (
+                            <Message varient='danger'>{errorReview}</Message>
+                          )}
+                          {userInfo ? (
+                            <form onSubmit={reviewSubmitHandler}>
+                              <label
+                                htmlFor='customRange3'
+                                className='form-label'
+                              >
+                                Rating :
+                              </label>
+                              <input
+                                type='range'
+                                className='form-range'
+                                value={rating}
+                                onChange={(e) => setRating(e.target.value)}
+                                min='0'
+                                max='5'
+                                step='0.5'
+                                id='customRange3'
+                              />
+                              <div className='input-group mt-2'>
+                                <span className='input-group-text'>
+                                  Comment :
+                                </span>
+                                <textarea
+                                  className='form-control'
+                                  value={comment}
+                                  onChange={(e) => setComment(e.target.value)}
+                                  aria-label='With textarea'
+                                ></textarea>
+                              </div>
+                              <button
+                                type='submit'
+                                className='btn btn-block btn- mt-2'
+                              >
+                                Submit Review
+                              </button>
+                            </form>
+                          ) : (
+                            <Message>
+                              Please <Link to='/login'>Sign In</Link> to write a
+                              review.
+                            </Message>
+                          )}
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </div>
