@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 const Search = ({ history }) => {
   const [keyword, setKeyword] = useState("");
-  console.log(history);
+  // console.log(history);
 
   const submitHandler = (event) => {
     event.preventDefault();
