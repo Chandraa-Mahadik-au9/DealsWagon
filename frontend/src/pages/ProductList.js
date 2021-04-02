@@ -57,7 +57,7 @@ const ProductList = ({ history, match }) => {
     successDelete,
     successCreate,
     createdProduct,
-    pageNumber
+    pageNumber,
   ]);
 
   const deleteUserHandler = (id) => {
@@ -137,7 +137,7 @@ const ProductList = ({ history, match }) => {
           </tbody>
         </table>
       )}
-      <Paginatn pages={pages} page={page} />
+      <Paginatn pages={pages} page={page} isAdmin={true} />
     </div>
   );
 };

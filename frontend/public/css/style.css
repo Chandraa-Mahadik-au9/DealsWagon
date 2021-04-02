@@ -41,4 +41,14 @@ a {
 .profileButton {
   border-radius: 0.5rem !important;
 }
+
+.homeCarousel {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
 /*# sourceMappingURL=style.css.map */
